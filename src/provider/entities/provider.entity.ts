@@ -1,18 +1,21 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('admin')
-export class Admin {
+@Entity('product')
+export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  title: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column({ type: 'text', nullable: true })
+  detail: string;
 
-  @Column({ unique: true, nullable: true })
-  mobile_number: string;
+  @Column({ nullable: true })
+  img: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  price: number;
 
   @Column({ type: 'date', nullable: true })
   created_at: Date;
