@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('user')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -11,15 +11,18 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column()
+  password: string;
+
   @Column({ unique: true, nullable: true })
   mobile_number: string;
 
-  @Column({ type: 'date', nullable: true })
+  @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @UpdateDateColumn({ type: 'timestamp' }) 
   updated_at: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   deleted_at: Date;
 }
