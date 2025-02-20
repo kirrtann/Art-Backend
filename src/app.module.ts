@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
-import { TokenModule } from './token/token.module';
+import { AuthModule } from './token/token.module';
 import { AdminModule } from './admin/admin.module';
 import { OrderModule } from './order/order.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -23,7 +23,7 @@ import { admin } from './admin/entities/admin.entity';
     entities: [User, admin],
     synchronize: true,
     autoLoadEntities: true,
-  }), UserModule, TokenModule, AdminModule, OrderModule],
+  }), UserModule,AuthModule, AdminModule, OrderModule],
   controllers: [],
   providers: [],
 })

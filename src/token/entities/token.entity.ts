@@ -1,18 +1,24 @@
 import { User } from './../../user/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 
-@Entity('token')
+@Entity()
 export class Token {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'text' })
-  jwt: string;
-
-  @ManyToOne(() => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user)
   user: User;
 
-  @Column({ type: 'date', nullable: true })
+  @Column()
+  token: string;
+
+  @CreateDateColumn()
   created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @DeleteDateColumn()
+  deleted_at: Date;
 }

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Token } from 'src/token/entities/token.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity('user')
 export class User {
@@ -20,8 +21,11 @@ export class User {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' }) 
+  @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+
+  @OneToMany(() => Token, (token) => token.user)
+  tokens: Token[];
 
   @Column({ type: 'timestamp', nullable: true })
   deleted_at: Date;

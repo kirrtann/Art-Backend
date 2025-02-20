@@ -1,34 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { TokenService } from './token.service';
-import { CreateTokenDto } from './dto/create-token.dto';
-import { UpdateTokenDto } from './dto/update-token.dto';
 
-@Controller('token')
-export class TokenController {
-  constructor(private readonly tokenService: TokenService) {}
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UsersService } from './../user/user.service';
+import { AuthService } from './token.service';
+import { Controller, Post, Body, BadRequestException, UnauthorizedException, InternalServerErrorException, Res } from '@nestjs/common';
+import { LoginUserDto } from 'src/user/dto/login-user.dto';
 
-  @Post()
-  create(@Body() createTokenDto: CreateTokenDto) {
-    return this.tokenService.create(createTokenDto);
+
+
+@Controller('auth')
+export class AuthController {
+  constructor(
+    private authService: AuthService,
+    private userService: UsersService
+  ) { }
+
+
+  @Post('singup')
+  async singup(@Body() CreateUserDto: CreateUserDto,) {
+    return this.userService.createUser(CreateUserDto)
+  }
+  @Post('login')
+  async login(@Body() loginUserDto: LoginUserDto) {
+    if (!loginUserDto || !loginUserDto.email || !loginUserDto.password) {
+      throw new BadRequestException('Email and password are required');
+    }
+    return this.userService.login(loginUserDto);
   }
 
-  @Get()
-  findAll() {
-    return this.tokenService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tokenService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTokenDto: UpdateTokenDto) {
-    return this.tokenService.update(+id, updateTokenDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tokenService.remove(+id);
-  }
 }
+

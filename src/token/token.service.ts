@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTokenDto } from './dto/create-token.dto';
-import { UpdateTokenDto } from './dto/update-token.dto';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Token } from './entities/token.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
-export class TokenService {
-  create(createTokenDto: CreateTokenDto) {
-    return 'This action adds a new token';
-  }
+export class AuthService {
+  constructor(
+    private jwtService: JwtService,
+    @InjectRepository(Token) private tokenRepository: Repository<Token>,
+  ) { }
 
-  findAll() {
-    return `This action returns all token`;
-  }
+  async generateToken(user: User): Promise<string> {
 
-  findOne(id: number) {
-    return `This action returns a #${id} token`;
-  }
+    try {
+      const payload = { id: user.id, email: user.email };
+      const token = this.jwtService.sign(payload);
 
-  update(id: number, updateTokenDto: UpdateTokenDto) {
-    return `This action updates a #${id} token`;
-  }
+      const tokenEntry = this.tokenRepository.create({
+        user,
+        token,
+      });
 
-  remove(id: number) {
-    return `This action removes a #${id} token`;
+      await this.tokenRepository.save(tokenEntry);
+      return token;
+
+    }
+    catch (error) {
+      throw new InternalServerErrorException('Something went wrong,');
+    }
   }
 }
