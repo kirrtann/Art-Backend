@@ -2,7 +2,7 @@
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UsersService } from './../user/user.service';
 import { AuthService } from './token.service';
-import { Controller, Post, Body, BadRequestException, UnauthorizedException, InternalServerErrorException, Res } from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException} from '@nestjs/common';
 import { LoginUserDto } from 'src/user/dto/login-user.dto';
 
 

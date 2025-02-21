@@ -39,19 +39,23 @@ export class UsersService {
   }
 
   async login(loginUserDto: LoginUserDto) {
-
+    const user = await this.validateUser(loginUserDto.email, loginUserDto.password);
+    
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+  
     try {
-      const user = await this.validateUser(loginUserDto.email, loginUserDto.password);
-      if (!user) {
-        throw new UnauthorizedException('Invalid email or password');
-      }
       const token = await this.authService.generateToken(user);
-      return { token }
+      return { 
+        token 
+      };
     } catch (error) {
       console.error('Login error:', error);
-      throw new InternalServerErrorException(error.message || 'Something went wrong, please try again.')
+      throw new InternalServerErrorException('Login failed. Please try again later.');
     }
   }
+  
 
 
   async update(id: string, user: Partial<User>) {

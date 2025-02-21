@@ -13,22 +13,25 @@ export class AuthService {
   ) { }
 
   async generateToken(user: User): Promise<string> {
-
     try {
       const payload = { id: user.id, email: user.email };
-      const token = this.jwtService.sign(payload);
+    const token = this.jwtService.sign(payload);
+      let tokenEntry = await this.tokenRepository.findOne({ where: { user: { id: user.id } } });
 
-      const tokenEntry = this.tokenRepository.create({
-        user,
-        token,
-      });
-
-      await this.tokenRepository.save(tokenEntry);
+      if (tokenEntry) {
+        await this.tokenRepository.update({ id: tokenEntry.id }, { token, updated_at: new Date() });
+      } else {
+        tokenEntry = this.tokenRepository.create({ user, token });
+        await this.tokenRepository.save(tokenEntry);
+      }
+  
       return token;
-
-    }
-    catch (error) {
-      throw new InternalServerErrorException('Something went wrong,');
+    } catch (error) {
+      console.error('Token generation error:', error);
+      throw new InternalServerErrorException('Token generation failed.');
     }
   }
+  
+  
+  
 }

@@ -1,16 +1,16 @@
 import { User } from './../../user/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity()
-export class Token {
+export class  Token {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
-  @ManyToOne(() => User, (user) => user)
+  @OneToOne(() => User, { onDelete: 'CASCADE' }) 
+  @JoinColumn({ name: 'fk_user' }) 
   user: User;
 
-  @Column()
+  @Column({ unique: true }) 
   token: string;
 
   @CreateDateColumn()
