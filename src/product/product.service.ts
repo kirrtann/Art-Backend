@@ -13,7 +13,7 @@ export class ProductService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>
   ) { }
-
+//creact the product
   async CreateProduct(createProductDto: CreateProductDto, req: Request, res: Response) {
     try {
       const product = this.productRepository.create({
@@ -31,18 +31,21 @@ export class ProductService {
       response.failureResponse({ message: 'Error creating product', data: error.message }, res);
     }
   }
-
-  async UpdateProduct(createProductDto: CreateProductDto, req: Request, res: Response) {
+//update the product
+  async UpdateProduct(id:number,createProductDto: CreateProductDto, req: Request, res: Response) {
     try {
-      const product = await this.productRepository.findOneBy({ id: req.body.id });
+      const product = await this.productRepository.findOneBy({ id });
 
       if (!product) {
         return response.recordNotFound({ message: 'Product not found', data: null }, res);
       }
       product.title = createProductDto.title;
       product.detail = createProductDto.detail;
-      product.img = createProductDto.img;
       product.price = createProductDto.price;
+
+if( createProductDto.img){[
+  product.img  = createProductDto.img
+]}
 
       const updatedProduct = await this.productRepository.save(product);
 
@@ -52,6 +55,8 @@ export class ProductService {
       response.failureResponse({ message: 'Error updating product', data: error.message }, res);
     }
   }
+
+//delete the product
   async deleteproduct(id: number, req: Request, res: Response) {
     try {
       const product = await this.productRepository.findOneBy({
@@ -66,7 +71,7 @@ export class ProductService {
       response.successResponse({ message: 'Product deleted successfully', data: updatedProduct }, res);
     } catch (error) {
       console.error('Error in UpdateProduct:', error);
-      response.failureResponse({ message: 'Error updating product', data: error.message }, res);
+      response.failureResponse({ message: 'Error delete product', data: error.message }, res);
     }
 
   }
