@@ -26,6 +26,7 @@ export const multerOptions = {
       const fileExt = extname(file.originalname);
       cb(null, `uploads/${uniqueSuffix}${fileExt}`);
     },
+    contentDisposition: 'inline',
   }),
   fileFilter: (req, file, cb) => {
     if (!file.mimetype.startsWith('image/')) {

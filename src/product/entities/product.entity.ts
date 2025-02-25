@@ -1,19 +1,27 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { IsNotEmpty, IsString, IsNumber, IsOptional, IsUrl } from 'class-validator';
 
 @Entity('product')
 export class Product {
   @PrimaryGeneratedColumn()
   id: number; 
   @Column()
+  @IsNotEmpty()
+  @IsString()
   title: string;
 
   @Column()
+  @IsNotEmpty()
+  @IsString()
   detail: string;
 
   @Column()
+  @IsUrl()
   img: string;
 
-  @Column()
+  @Column() 
+   @IsNotEmpty()
+  @IsNumber()
   price: number;
 
   @CreateDateColumn({ type: 'timestamp' })

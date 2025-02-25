@@ -25,6 +25,8 @@ export class ProductService {
       const savedProduct = await this.productRepository.save(product);
 
       response.successCreate(savedProduct, res);
+      console.log();
+      
     } catch (error) {
       console.error('Error in CreateProduct:', error)
       response.failureResponse({ message: 'Error creating product', data: error.message }, res);
