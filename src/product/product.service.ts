@@ -1,11 +1,10 @@
 import { Injectable, Req, Res } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Request, Response } from 'express';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import response from 'utils/constant/reponse';
-
 
 @Injectable()
 export class ProductService {
@@ -13,7 +12,7 @@ export class ProductService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>
   ) { }
-//creact the product
+  //creact the product
   async CreateProduct(createProductDto: CreateProductDto, req: Request, res: Response) {
     try {
       const product = this.productRepository.create({
@@ -31,8 +30,8 @@ export class ProductService {
       response.failureResponse({ message: 'Error creating product', data: error.message }, res);
     }
   }
-//update the product
-  async UpdateProduct(id:number,createProductDto: CreateProductDto, req: Request, res: Response) {
+  //update the product
+  async UpdateProduct(id: number, createProductDto: CreateProductDto, req: Request, res: Response) {
     try {
       const product = await this.productRepository.findOneBy({ id });
 
@@ -42,11 +41,12 @@ export class ProductService {
       product.title = createProductDto.title;
       product.detail = createProductDto.detail;
       product.price = createProductDto.price;
-
-if( createProductDto.img){[
-  product.img  = createProductDto.img
-]}
-
+      if (createProductDto.img) {
+        [
+          product.img = createProductDto.img
+        ]
+      }
+      product.updated_at = new Date();
       const updatedProduct = await this.productRepository.save(product);
 
       response.successResponse({ message: 'Product updated successfully', data: updatedProduct }, res);
@@ -56,7 +56,7 @@ if( createProductDto.img){[
     }
   }
 
-//delete the product
+  //delete the product
   async deleteproduct(id: number, req: Request, res: Response) {
     try {
       const product = await this.productRepository.findOneBy({
@@ -76,4 +76,18 @@ if( createProductDto.img){[
 
   }
 
+  //find the all Product
+  async all(req: Request, res: Response) {
+    try {
+      const products = await this.productRepository.find({
+        where: { deleted_at: IsNull() }
+      });
+
+      console.log('Active Products:', products);
+      res.status(200).json({ status: 1, data: products });
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).json({ status: 0, message: 'Error fetching products' });
+    }
+  }
 }

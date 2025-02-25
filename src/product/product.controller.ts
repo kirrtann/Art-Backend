@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, Res, Patch, Delete, UseInterceptors, UploadedFile, Param, Put } from '@nestjs/common';
+import { Controller, Post, Body, Req, Res, Patch, Delete, UseInterceptors, UploadedFile, Param, Put, Get } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Request, Response } from 'express';
@@ -8,6 +8,11 @@ import { multerOptions } from 'multer.config';
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
+
+@Get('all')
+async all(@Req() req: Request, @Res() res: Response) {
+  return this.productService.all(req,res)
+}
 
   @Post('create')
   @UseInterceptors(FileInterceptor('image', multerOptions))
