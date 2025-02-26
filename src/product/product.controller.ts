@@ -4,6 +4,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'multer.config';
+import response from 'utils/constant/reponse';
 
 @Controller('product')
 export class ProductController {
@@ -37,27 +38,32 @@ async all(@Req() req: Request, @Res() res: Response) {
   @Put('update/:id')
   @UseInterceptors(FileInterceptor('image', multerOptions))
   async update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
     @Body() createProductDto: CreateProductDto,
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    console.log('Updated File:', file);
-    console.log('Request Body:', req.body);
-
-    if (file) {
-      createProductDto.img = (file as any).locations
+    try {
       createProductDto.title = req.body.title;
       createProductDto.detail = req.body.detail;
       createProductDto.price = req.body.price;
+  
+      // Use correct image path based on storage type
+      if (file) {
+        createProductDto.img = (file as any).location || file.path;
+      }
+  
+      return this.productService.UpdateProduct(id, createProductDto, res);
+    } catch (error) {
+      console.error("Error updating product:", error);
+      response.failureResponse({ message: "Error updating product", data: error.message }, res);
     }
-    return this.productService.UpdateProduct(id, createProductDto, req, res);
   }
 
   @Delete('delete/:id')
   async delete(
-    @Body() id: number,
+    @Param('id') id:string,
     @Req() req: Request,
     @Res() res: Response,
   ) {

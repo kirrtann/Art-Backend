@@ -3,8 +3,9 @@ import { IsNotEmpty, IsString, IsNumber, IsOptional, IsUrl } from 'class-validat
 
 @Entity('product')
 export class Product {
-  @PrimaryGeneratedColumn()
-  id: number; 
+  @PrimaryGeneratedColumn('uuid')
+  id: string; 
+  
   @Column()
   @IsNotEmpty()
   @IsString()

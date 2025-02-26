@@ -25,7 +25,7 @@ export class ProductService {
       const savedProduct = await this.productRepository.save(product);
 
       response.successCreate(savedProduct, res);
-      console.log();
+    
       
     } catch (error) {
       console.error('Error in CreateProduct:', error)
@@ -33,24 +33,27 @@ export class ProductService {
     }
   }
   //update the product
-  async UpdateProduct(id: number, createProductDto: CreateProductDto, req: Request, res: Response) {
+  async UpdateProduct(id: string, createProductDto: CreateProductDto, res: Response) {
     try {
       const product = await this.productRepository.findOneBy({ id });
-
+  
       if (!product) {
         return response.recordNotFound({ message: 'Product not found', data: null }, res);
       }
+  
+      // Update product details
       product.title = createProductDto.title;
       product.detail = createProductDto.detail;
       product.price = createProductDto.price;
+  
+      // Update image only if a new one is provided
       if (createProductDto.img) {
-        [
-          product.img = createProductDto.img
-        ]
+        product.img = createProductDto.img;
       }
+  
       product.updated_at = new Date();
       const updatedProduct = await this.productRepository.save(product);
-
+  
       response.successResponse({ message: 'Product updated successfully', data: updatedProduct }, res);
     } catch (error) {
       console.error('Error in UpdateProduct:', error);
@@ -59,16 +62,15 @@ export class ProductService {
   }
 
   //delete the product
-  async deleteproduct(id: number, req: Request, res: Response) {
+  async deleteproduct(id: string, req: Request, res: Response) {
     try {
       const product = await this.productRepository.findOneBy({
-        id: req
-          .body.id
+        id
       });
       if (!product) {
         return response.recordNotFound({ message: 'Product not found', data: null }, res);
       }
-      product.deleted_at = new Date();
+      product.deleted_at = new Date()
       const updatedProduct = await this.productRepository.save(product);
       response.successResponse({ message: 'Product deleted successfully', data: updatedProduct }, res);
     } catch (error) {
@@ -85,7 +87,6 @@ export class ProductService {
         where: { deleted_at: IsNull() }
       });
 
-      console.log('Active Products:', products);
       res.status(200).json({ status: 1, data: products });
     } catch (error) {
       console.error('Error fetching products:', error);

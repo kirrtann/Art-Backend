@@ -15,7 +15,7 @@ export class AuthController {
   ) { }
 
 
-  @Post('singup')
+  @Post('signup')
   async singup(@Body() CreateUserDto: CreateUserDto,) {
     return this.userService.createUser(CreateUserDto)
   }
