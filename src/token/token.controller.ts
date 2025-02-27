@@ -2,8 +2,9 @@
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UsersService } from './../user/user.service';
 import { AuthService } from './token.service';
-import { Controller, Post, Body, BadRequestException} from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException, Res} from '@nestjs/common';
 import { LoginUserDto } from 'src/user/dto/login-user.dto';
+import { Response } from 'express';
 
 
 
@@ -20,11 +21,11 @@ export class AuthController {
     return this.userService.createUser(CreateUserDto)
   }
   @Post('login')
-  async login(@Body() loginUserDto: LoginUserDto) {
+  async login(@Body() loginUserDto: LoginUserDto , @Res() res: Response ) {
     if (!loginUserDto || !loginUserDto.email || !loginUserDto.password) {
       throw new BadRequestException('Email and password are required');
     }
-    return this.userService.login(loginUserDto);
+    return this.userService.login(loginUserDto,res);
   }
 
 }

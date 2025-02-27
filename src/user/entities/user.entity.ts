@@ -1,5 +1,6 @@
-import { Token } from 'src/token/entities/token.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Token } from 'src/token/entities/token.entity';
+import { Product } from 'src/product/entities/product.entity';
 
 @Entity('user')
 export class User {
@@ -18,6 +19,9 @@ export class User {
   @Column({ unique: true, nullable: true })
   mobile_number: string;
 
+  @Column({ default: 'user' })
+  role: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
@@ -27,6 +31,8 @@ export class User {
   @OneToMany(() => Token, (token) => token.user)
   tokens: Token[];
 
+  @OneToMany(() => Product, (product) => product.user, { cascade: true })
+  products: Product[];  
   @Column({ type: 'timestamp', nullable: true })
   deleted_at: Date;
 }

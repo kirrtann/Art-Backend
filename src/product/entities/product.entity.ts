@@ -1,28 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { IsNotEmpty, IsString, IsNumber, IsOptional, IsUrl } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
 
 @Entity('product')
 export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string; 
-  
+
+  @ManyToOne(() => User, (user) => user.products, { onDelete: 'CASCADE' }) 
+  @JoinColumn({ name: 'user_id' }) 
+  user: User; 
+
   @Column()
-  @IsNotEmpty()
-  @IsString()
   title: string;
 
   @Column()
-  @IsNotEmpty()
-  @IsString()
   detail: string;
 
   @Column()
-  @IsUrl()
   img: string;
 
   @Column() 
-   @IsNotEmpty()
-  @IsNumber()
   price: number;
 
   @CreateDateColumn({ type: 'timestamp' })
@@ -33,5 +30,4 @@ export class Product {
 
   @Column({ type: 'timestamp', nullable: true })
   deleted_at: Date;
-
 }
