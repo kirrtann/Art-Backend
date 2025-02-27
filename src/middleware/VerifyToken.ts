@@ -23,6 +23,7 @@ export class VerifyTokenMiddleware implements NestMiddleware {
       const token = authHeader.split(' ')[1];
       const validate = jwt.verify(token, process.env.JWT_SECRET) as jwt.JwtPayload;
 
+
       if (!validate || typeof validate === 'string' || !validate.id) {
         return response.unAuthorizedRequest(res);
       }

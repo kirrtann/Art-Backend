@@ -1,14 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 
 @Entity('product')
 export class Product {
   @PrimaryGeneratedColumn('uuid')
-  id: string; 
+  id: string;
 
-  @ManyToOne(() => User, (user) => user.products, { onDelete: 'CASCADE' }) 
-  @JoinColumn({ name: 'user_id' }) 
-  user: User; 
+  @ManyToOne(() => User, (user) => user.products, { onDelete: 'CASCADE', eager: true })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column()
   title: string;
@@ -19,7 +27,7 @@ export class Product {
   @Column()
   img: string;
 
-  @Column() 
+  @Column()
   price: number;
 
   @CreateDateColumn({ type: 'timestamp' })
