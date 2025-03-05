@@ -6,15 +6,21 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
+  ManyToMany,
 } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { Order } from 'src/order/entities/order.entity';
 
 @Entity('product')
 export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.products, { onDelete: 'CASCADE', eager: true })
+  @ManyToOne(() => User, (user) => user.products, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
@@ -29,6 +35,9 @@ export class Product {
 
   @Column()
   price: number;
+
+  // @ManyToMany(() => Order, (order) => order)
+  // orders: Order[]
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
