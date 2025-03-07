@@ -7,7 +7,7 @@ import { multerOptions } from 'multer.config';
 import response from 'utils/constant/reponse';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/user/entities/user.entity';
-import { get } from 'http';
+
 
 interface RequestWithUser extends Request {
   user?: User;

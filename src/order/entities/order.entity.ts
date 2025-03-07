@@ -1,39 +1,28 @@
+import { Product } from 'src/product/entities/product.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  OneToMany,
+  Entity,
   JoinColumn,
-  ManyToMany,
-  JoinTable,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';
-import { Product } from 'src/product/entities/product.entity';
 
 @Entity('orders')
 export class Order {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  // @ManyToOne(() => User, (user) => user.orders, {
-  //   onDelete: 'CASCADE',
-  //   eager: true,
-  // })
-  // @JoinColumn({ name: 'user_id' })
-  // user: User;
+  @ManyToOne(() => User, (user) => user.orders, { eager: true })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
- 
-  @ManyToMany(() => Product, (product) => product)
-  @JoinTable() 
-  products: Product[];
+  @ManyToOne(() => Product, (product) => product.orders, { eager: true })
+  @JoinColumn({ name: 'product_id' })
+  product: Product;
+
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
-
-  @UpdateDateColumn({ type: 'timestamp', nullable: true })
-  updated_at: Date;
-
-  @Column({ type: 'timestamp', nullable: true })
-  deleted_at: Date;
 }

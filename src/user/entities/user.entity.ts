@@ -10,6 +10,8 @@ import {
 import { Product } from 'src/product/entities/product.entity';
 import { Order } from 'src/order/entities/order.entity';
 
+
+
 @Entity('user')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -40,8 +42,8 @@ export class User {
   products: Product[];
 
 
-  // @OneToMany(() => Order, (order) => order.user)
-  // orders: Order[];
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
   
   @Column({ type: 'timestamp', nullable: true })
   deleted_at: Date;

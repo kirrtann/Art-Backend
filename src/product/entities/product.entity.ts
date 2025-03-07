@@ -12,6 +12,9 @@ import {
 import { User } from 'src/user/entities/user.entity';
 import { Order } from 'src/order/entities/order.entity';
 
+
+
+
 @Entity('product')
 export class Product {
   @PrimaryGeneratedColumn('uuid')
@@ -36,8 +39,7 @@ export class Product {
   @Column()
   price: number;
 
-  // @ManyToMany(() => Order, (order) => order)
-  // orders: Order[]
+
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
@@ -47,4 +49,7 @@ export class Product {
 
   @Column({ type: 'timestamp', nullable: true })
   deleted_at: Date;
+
+  @OneToMany(() => Order, (order) => order.product)
+  orders: Order[];
 }

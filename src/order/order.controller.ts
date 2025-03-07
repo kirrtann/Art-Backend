@@ -1,16 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { OrderService } from './order.service';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { Body, Controller, Get, Param, Post, Query, Req, Res } from '@nestjs/common';
+import { OrdersService } from './order.service';
 
 @Controller('order')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+  constructor(private readonly ordersService: OrdersService) {}
 
-  @Post('')
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
+  @Get('history/:user_id')
+  async getUserOrders(@Param('user_id') user_id: string) {
+    return this.ordersService.getUserOrders(user_id);
   }
-
- 
+  @Post('Postorder')
+  async orderDetail(
+    @Body() orderData: { user_id: string; product_id: string },
+  ) {
+    return this.ordersService.createOrder(
+      orderData.user_id,
+      orderData.product_id,
+    );
+  }
 }

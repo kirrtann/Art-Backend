@@ -10,7 +10,7 @@ import { Token } from 'src/token/entities/token.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Product,Token]),
+    TypeOrmModule.forFeature([Product,Token,Product]),
     AuthModule, 
   ],
   controllers: [ProductController],

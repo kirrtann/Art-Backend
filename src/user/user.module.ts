@@ -10,6 +10,6 @@ import { AuthModule } from 'src/token/token.module';
   imports: [TypeOrmModule.forFeature([User]),forwardRef(() => AuthModule)],
   controllers: [UserController],
   providers: [UsersService],
-  exports: [UsersService]
+  exports: [UsersService,TypeOrmModule]
 })
 export class UserModule {}
