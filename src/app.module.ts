@@ -7,7 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 import { User } from './user/entities/user.entity';
 import { admin } from './admin/entities/admin.entity';
 import { ProductModule } from './product/product.module';
-import { OrderModule } from './order/order.module';
+
+import { PdfModule } from './pdf/pdf.module';
+import { OrdersModule } from './order/order.module';
 
 
 
@@ -25,7 +27,7 @@ import { OrderModule } from './order/order.module';
     entities: [User, admin],
     synchronize: true,
     autoLoadEntities: true,
-  }), UserModule, AuthModule, AdminModule, ProductModule, OrderModule],
+  }), UserModule, AuthModule, AdminModule, ProductModule, OrdersModule, PdfModule],
   controllers: [],
   providers: [],
 })

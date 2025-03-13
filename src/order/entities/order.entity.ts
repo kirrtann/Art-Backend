@@ -22,7 +22,9 @@ export class Order {
   @JoinColumn({ name: 'product_id' })
   product: Product;
 
-
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
+
+  @Column({ type: 'varchar', nullable: true }) // Store invoice PDF URL
+  invoice_url: string;
 }

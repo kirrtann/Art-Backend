@@ -12,9 +12,6 @@ import {
 import { User } from 'src/user/entities/user.entity';
 import { Order } from 'src/order/entities/order.entity';
 
-
-
-
 @Entity('product')
 export class Product {
   @PrimaryGeneratedColumn('uuid')
@@ -39,7 +36,8 @@ export class Product {
   @Column()
   price: number;
 
-
+  @Column({ nullable: true })
+  status: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;

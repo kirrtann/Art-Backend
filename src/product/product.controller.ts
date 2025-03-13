@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, Res, Patch, Delete, UseInterceptors, UploadedFile, Param, Put, Get, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Req, Res, Patch, Delete, UseInterceptors, UploadedFile, Param, Put, Get, UseGuards, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Request, Response } from 'express';
@@ -32,6 +32,10 @@ async getArtByUserId(@Param('user_id') user_id: string, @Res() res: Response) {
   }
 }
 
+@Get('/search')
+async search(@Query('q') query: string) {
+  return this.productService.search(query)
+}
 @Post('create')
 @UseGuards(AuthGuard('jwt')) 
 @UseInterceptors(FileInterceptor('image', multerOptions)) 
@@ -63,31 +67,34 @@ async create(
   
 
 
-  @Put('update/:id')
-  @UseInterceptors(FileInterceptor('image', multerOptions))
-  async update(
-    @Param('id') id: string,
-    @UploadedFile() file: Express.Multer.File,
-    @Body() createProductDto: CreateProductDto,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
-    try {
-      createProductDto.title = req.body.title;
-      createProductDto.detail = req.body.detail;
-      createProductDto.price = req.body.price;
-  
-      // Use correct image path based on storage type
-      if (file) {
-        createProductDto.img = (file as any).location || file.path;
-      }
-  
-      return this.productService.UpdateProduct(id, createProductDto, res);
-    } catch (error) {
-      console.error("Error updating product:", error);
-      response.failureResponse({ message: "Error updating product", data: error.message }, res);
+@Put('update/:id')
+@UseInterceptors(FileInterceptor('image', multerOptions))
+async update(
+  @Param('id') id: string,
+  @UploadedFile() file: Express.Multer.File,
+  @Body() createProductDto: Partial<CreateProductDto>, // Use Partial for optional updates
+  @Res() res: Response,
+) {
+  try {
+    // Assign values to DTO
+    const updatedData: Partial<CreateProductDto> = {
+      title: createProductDto.title,
+      detail: createProductDto.detail,
+      price: createProductDto.price,
+    };
+
+    // Handle image update if provided
+    if (file) {
+      updatedData.img = (file as any).location || file.path;
     }
+
+    return this.productService.UpdateProduct(id, updatedData, res);
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return res.status(500).json({ message: "Error updating product", error: error.message });
   }
+}
+
 
   @Delete('delete/:id')
   async delete(
